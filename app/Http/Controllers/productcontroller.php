@@ -45,7 +45,7 @@ class productcontroller extends Controller
         if ($request->hasFile('hinhanh')) {
             $file = $request->file('hinhanh');
             $file_name = $file->getClientOriginalName();
-          
+            
     
             // Di chuyển file ảnh vào thư mục public/upload
             $file->move(public_path('upload'), $file_name);
@@ -69,7 +69,8 @@ class productcontroller extends Controller
      */
     public function show($id)
     {
-        //
+        $product = product::with('category')->findOrFail($id);
+        return response()->json($product);
     }
 
     /**
@@ -92,7 +93,20 @@ class productcontroller extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $product = product::findOrFail($id);
+        // $product->update($request->except('hinhanh'));
+
+    
+        if ($request->hasFile('hinhanh')) {
+            $file = $request->file('hinhanh');
+            $file_name = $file->getClientOriginalName();
+
+            $path = $request->file('hinhanh')->store('upload', 'public');
+            return response()->json(['file'=> $file,'hinhanh' => $request->file('hinhanh'), 'path' => $path]);
+            $product->update(['hinhanh' => $path]);
+        }
+
+        // return response()->json(['product' => $product]);
     }
 
     /**
@@ -110,11 +124,6 @@ class productcontroller extends Controller
     }
     public function thuocdanhmuc(){
         $category = category::all();
-     
-
-        
         return response()->json($category);
     }
-
-    
 }

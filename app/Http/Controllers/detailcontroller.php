@@ -52,7 +52,6 @@ class detailcontroller extends Controller
             $add_detail->themanhsp = $request['themanhsp'];
     
             $add_detail->save();
-    
             return response()->json($add_detail);
         }
     }

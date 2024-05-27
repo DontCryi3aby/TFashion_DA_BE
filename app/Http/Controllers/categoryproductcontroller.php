@@ -102,4 +102,10 @@ class categoryproductcontroller extends Controller
     {
         //
     }
+
+    public function getAll()
+    {
+        $categories = category::all();
+        return response()->json($categories);
+    }
 }

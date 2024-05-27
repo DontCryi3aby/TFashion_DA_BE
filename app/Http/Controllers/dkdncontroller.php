@@ -66,7 +66,7 @@ class dkdncontroller extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**
@@ -89,7 +89,7 @@ class dkdncontroller extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return response()->json(['req:', $request->all()]);
     }
 
     /**
