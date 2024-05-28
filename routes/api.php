@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\categoryproductcontroller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\homecontroller;
+use App\Http\Controllers\productcontroller;
+use App\Models\category;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +39,7 @@ Route::get('/product/{id}','App\Http\Controllers\productcontroller@show');
 Route::post('/add_product','App\Http\Controllers\productcontroller@store');
 Route::delete('/deleteproduct/{id}','App\Http\Controllers\productcontroller@destroy');
 Route::get('/thuocdanhmuc','App\Http\Controllers\productcontroller@thuocdanhmuc');
-Route::patch('/products/{id}','App\Http\Controllers\productcontroller@update');
+Route::patch('/products/{id}',[productcontroller::class, 'update']);
 
 Route::get('/check/{id}', 'App\Http\Controllers\checkoutcontroller@show');
 Route::post('/checkclient', 'App\Http\Controllers\checkoutcontroller@store');
@@ -63,6 +67,9 @@ Route::post('/accountlogin', [homecontroller::class, 'accountlogin']);
 
 Route::get('/categoryproduct','App\Http\Controllers\categoryproductcontroller@index');
 Route::get('/categories','App\Http\Controllers\categoryproductcontroller@getAll');
+Route::post('/categories', [categoryproductcontroller::class, 'store']);
+Route::patch('/categories/{id}', [categoryproductcontroller::class, 'update']);
+Route::delete('/categories/{id}', [categoryproductcontroller::class, 'destroy']);
 
 Route::post('/checkout/{id}','App\Http\Controllers\checkoutcontroller@index');
 

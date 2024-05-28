@@ -44,7 +44,7 @@ class categoryproductcontroller extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -55,7 +55,8 @@ class categoryproductcontroller extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $category = category::create($request->all());
+        return response()->json($category);
     }
 
     /**
@@ -66,7 +67,8 @@ class categoryproductcontroller extends Controller
      */
     public function show($id)
     {
-        //
+        $category = category::findOrFail($id);
+        return response()->json($category);
     }
 
     /**
@@ -89,7 +91,10 @@ class categoryproductcontroller extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $category = category::findOrFail($id);
+        $category->update($request->all());
+        return response()->json($category);
+
     }
 
     /**
@@ -100,7 +105,12 @@ class categoryproductcontroller extends Controller
      */
     public function destroy($id)
     {
-        //
+        $category = category::findOrFail($id);
+        $category->delete();
+        return response()->json([
+            'status'=> 200,
+            'message' => "Category deleted successfully!"
+        ]);
     }
 
     public function getAll()

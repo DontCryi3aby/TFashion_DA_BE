@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\product;
 use App\Models\category;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class productcontroller extends Controller
 {
@@ -13,10 +15,17 @@ class productcontroller extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $product = product::all();
-        return response()->json($product);
+
+        
+        if($title = $request->query('title')){
+            return response()->json(product::where('title', 'like', '%'.$title.'%')->get());
+        } else {
+            return response()->json($product);
+        }
+
     }
 
     /**
@@ -94,19 +103,20 @@ class productcontroller extends Controller
     public function update(Request $request, $id)
     {
         $product = product::findOrFail($id);
-        // $product->update($request->except('hinhanh'));
-
-    
+        $product->update($request->except('hinhanh'));
+        
+        
         if ($request->hasFile('hinhanh')) {
             $file = $request->file('hinhanh');
-            $file_name = $file->getClientOriginalName();
+            $file_name = Str::random(32).".".$request->hinhanh->getClientOriginalExtension();
 
-            $path = $request->file('hinhanh')->store('upload', 'public');
-            return response()->json(['file'=> $file,'hinhanh' => $request->file('hinhanh'), 'path' => $path]);
-            $product->update(['hinhanh' => $path]);
+            $file->move(public_path('upload'), $file_name);
+            $product->hinhanh = $file_name;
+
+            $product->save();
         }
 
-        // return response()->json(['product' => $product]);
+        return response()->json(['product' => $product]);
     }
 
     /**

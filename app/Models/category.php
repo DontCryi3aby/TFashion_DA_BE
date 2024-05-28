@@ -11,12 +11,11 @@ class category extends Model
     use HasFactory;
     protected $table = 'category';
     protected $primaryKey = 'id';
-    protected $guarded = [
-      'namecategory',
-      
+    protected $fillable = [
+      'namecategory'
     ];
 
-    public function product()
+    public function products()
     {
     	return $this->hasMany(product::class);
     }

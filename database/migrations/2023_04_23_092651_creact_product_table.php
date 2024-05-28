@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('hinhanh');
             $table->string('title');
-          
             $table->string('gia');
             $table->integer('category_id');
         });
