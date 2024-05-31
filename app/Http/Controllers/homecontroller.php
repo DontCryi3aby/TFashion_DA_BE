@@ -105,24 +105,51 @@ class homecontroller extends Controller
 
     public function login(Request $request)
     {
-          // Lấy email và password từ request
-          $email = $request->input('email');
-          $password = $request->input('password');
-         
-          // Tìm người dùng bằng email
-          $user = dkdn::where('email', $email)->first();
-  
-          // Kiểm tra xem người dùng có tồn tại và mật khẩu có chính xác hay không
-          if ($user && Hash::check($password, $user->password)) {
-              // Tạo một access token mới
-              $accessToken = $user->createToken('login')->accessToken;
-  
-              // Trả về access token như một phản hồi
-              return response()->json(['access_token' => $accessToken, 'user' => $user], 200);
-          } else {
-              // Trả về một phản hồi lỗi nếu người dùng không tồn tại hoặc mật khẩu không chính xác
-              return response()->json(['error' => 'Invalid credentials'], 401);
-          }
+        if($request->is_google_login || $request->is_facebook_login){
+            $user = dkdn::where('email', $request->email)->first();
+            if($user){
+                $accessToken = $user->createToken('login')->accessToken;
+                return response()->json(['access_token' => $accessToken, 'user' => $user], 200);
+            }
+            else {
+                $newUser = dkdn::create([
+                    'name'=>$request->name,
+                    'sdt'=> 969696969,
+                    'email'=>$request->email,
+                    'password'=>bcrypt('243243'),
+                ]);
+
+                if($request->hasFile('avatar')){
+                    $path = $request->file('avatar')->store('avatars', 'public');
+                    $newUser->update(['avatar' => $path]);
+                }
+
+                $accessToken = $newUser->createToken('login')->accessToken;
+
+                return response()->json(['access_token' => $accessToken, 'user' => $newUser], 200);
+            }
+        }
+        else {
+            // Lấy email và password từ request
+            $email = $request->input('email');
+            $password = $request->input('password');
+           
+            // Tìm người dùng bằng email
+            $user = dkdn::where('email', $email)->first();
+    
+            // Kiểm tra xem người dùng có tồn tại và mật khẩu có chính xác hay không
+            if ($user && Hash::check($password, $user->password)) {
+                // Tạo một access token mới
+                $accessToken = $user->createToken('login')->accessToken;
+    
+                // Trả về access token như một phản hồi
+                return response()->json(['access_token' => $accessToken, 'user' => $user], 200);
+            } else {
+                // Trả về một phản hồi lỗi nếu người dùng không tồn tại hoặc mật khẩu không chính xác
+                return response()->json(['error' => 'Invalid credentials'], 401);
+            }
+
+        }
     }
 
     public function accountlogin(Request $request)

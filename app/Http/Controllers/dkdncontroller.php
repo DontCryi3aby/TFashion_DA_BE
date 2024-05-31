@@ -55,6 +55,11 @@ class dkdncontroller extends Controller
         $dkdn->password = bcrypt($request->matkhau);
     
         $dkdn->save();
+
+        if($request->hasFile('avatar')){
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $dkdn->update(['avatar' => $path]);
+        }
     
         return response()->json($dkdn);
     }
