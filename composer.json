@@ -10,6 +10,7 @@
         "laravel/framework": "^9.19",
         "laravel/passport": "^10.4",
         "laravel/sanctum": "^3.2",
+        "openai-php/laravel": "^0.7.0",
         "phpmailer/phpmailer": "^6.8"
     },
     "require-dev": {
@@ -58,7 +59,8 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
         }
     },
     "minimum-stability": "stable",

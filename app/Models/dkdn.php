@@ -13,14 +13,6 @@ class dkdn extends Model
     protected $table = 'dkdn';
     protected $primaryKey = 'id';
     protected $guarded = [];
-    protected $fillable  = [
-      'name',
-      'sdt',
-      'email',
-      'password',
-    
-      
-    ];
     public function cart()
     {
         return $this->hasMany('App\Models\cart');

@@ -54,6 +54,7 @@ Route::get('/thongtinkhachhang','App\Http\Controllers\dkdncontroller@index');
 Route::post('/dkdn','App\Http\Controllers\dkdncontroller@store');
 Route::delete('/thongtinkhachhang/{id}','App\Http\Controllers\dkdncontroller@destroy');
 Route::patch('/users/{id}','App\Http\Controllers\dkdncontroller@update');
+Route::get('/users/{id}','App\Http\Controllers\dkdncontroller@show');
 
 
 Route::get('/dondathang','App\Http\Controllers\dondathangcontroller@index');

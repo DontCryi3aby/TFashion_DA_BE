@@ -55,7 +55,12 @@ class categoryproductcontroller extends Controller
      */
     public function store(Request $request)
     {
-        $category = category::create($request->all());
+        $category = category::create(['namecategory' => $request->namecategory]);
+        if($productIDs = $request->product_ids){
+            // foreach ($productIDs as $productID){ 
+
+            // }
+        }
         return response()->json($category);
     }
 
@@ -115,7 +120,7 @@ class categoryproductcontroller extends Controller
 
     public function getAll()
     {
-        $categories = category::all();
+        $categories = Category::with('products')->get();
         return response()->json($categories);
     }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\dkdn;
 use Hash;
+use Illuminate\Support\Facades\Storage;
+
 class dkdncontroller extends Controller
 {
     /**
@@ -66,7 +68,8 @@ class dkdncontroller extends Controller
      */
     public function show($id)
     {
-        
+        $user = dkdn::findOrFail($id);
+        return response()->json($user);
     }
 
     /**
@@ -89,7 +92,22 @@ class dkdncontroller extends Controller
      */
     public function update(Request $request, $id)
     {
-        return response()->json(['req:', $request->all()]);
+        // return response()->json($request->hasFile('avatar'));
+
+        $user = dkdn::findOrFail($id);
+        $user->update($request->except('avatar'));
+        
+        if($request->hasFile('avatar')){
+            $path = $request->file('avatar')->store('avatars', 'public');
+
+            if($oldAvatar = $user->avatar){
+                Storage::disk('public')->delete($oldAvatar);
+            }
+
+            $user->update(['avatar' => $path]);
+        }
+        
+        return response()->json($user);
     }
 
     /**

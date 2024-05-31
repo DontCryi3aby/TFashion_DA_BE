@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\product;
 use App\Models\category;
+use App\Models\detail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -17,13 +18,14 @@ class productcontroller extends Controller
      */
     public function index(Request $request)
     {
-        $product = product::all();
-
-        
         if($title = $request->query('title')){
             return response()->json(product::where('title', 'like', '%'.$title.'%')->get());
         } else {
-            return response()->json($product);
+            $products = product::all();
+            foreach ($products as $product) {
+                $product->category = category::find($product->category_id)->namecategory;       
+            }
+            return response()->json($products);
         }
 
     }
@@ -66,6 +68,16 @@ class productcontroller extends Controller
         }
     
         $product->save();
+
+        if($request->themanhsp && $request->chatlieu && $request->tinhtrang) {
+            $detail = new detail;
+            $detail->product_id = $product->id;
+            $detail->tinhtrang = $request['tinhtrang'];
+            $detail->chatlieu = $request['chatlieu'];
+            $detail->themanhsp = $request['themanhsp'];
+    
+            $detail->save();
+        }
     
         return response()->json(['message' => 'Product created successfully!', 'data' => $product]);
     }
