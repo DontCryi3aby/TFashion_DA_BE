@@ -19,13 +19,61 @@ class productcontroller extends Controller
     public function index(Request $request)
     {
         if($title = $request->query('title')){
-            return response()->json(product::where('title', 'like', '%'.$title.'%')->get());
-        } else {
-            $products = product::all();
-            foreach ($products as $product) {
-                $product->category = category::find($product->category_id)->namecategory;       
+            if($request->query('priceFrom')&& $request->query('priceTo')){
+                $products = product::where('gia', '>=', $request->query('priceFrom'))->where('gia', '<=', $request->query('priceTo'))->where('title', 'like', '%'.$title.'%')->get();
+                foreach ($products as $product) {
+                    $product->category = category::find($product->category_id)->namecategory;       
+                }
+                return response()->json($products);
+            } else {
+                if($request->query('priceFrom')){
+                    $products = product::where('gia', '>=', $request->query('priceFrom'))->where('title', 'like', '%'.$title.'%')->get();
+                    foreach ($products as $product) {
+                        $product->category = category::find($product->category_id)->namecategory;       
+                    }
+                    return response()->json($products);
+                }
+                if($request->query('priceTo')){
+                    $products = product::where('gia', '<=', $request->query('priceTo'))->where('title', 'like', '%'.$title.'%')->get();
+                    foreach ($products as $product) {
+                        $product->category = category::find($product->category_id)->namecategory;       
+                    }
+                    return response()->json($products);
+                }
+                $products = product::where('title', 'like', '%'.$title.'%')->get();
+                foreach ($products as $product) {
+                    $product->category = category::find($product->category_id)->namecategory;       
+                }
+                return response()->json($products);
             }
-            return response()->json($products);
+        } else {
+            if($request->query('priceFrom')&& $request->query('priceTo')){
+                $products = product::where('gia', '>=', $request->query('priceFrom'))->where('gia', '<=', $request->query('priceTo'))->get();
+                foreach ($products as $product) {
+                    $product->category = category::find($product->category_id)->namecategory;       
+                }
+                return response()->json($products);
+            } else {
+                if($request->query('priceFrom')){
+                    $products = product::where('gia', '>=', $request->query('priceFrom'))->get();
+                    foreach ($products as $product) {
+                        $product->category = category::find($product->category_id)->namecategory;       
+                    }
+                    return response()->json($products);
+                }
+                if($request->query('priceTo')){
+                    $products = product::where('gia', '<=', $request->query('priceTo'))->get();
+                    foreach ($products as $product) {
+                        $product->category = category::find($product->category_id)->namecategory;       
+                    }
+                    return response()->json($products);
+                }
+                $products = product::all();
+                foreach ($products as $product) {
+                    $product->category = category::find($product->category_id)->namecategory;       
+                }
+                return response()->json($products);
+            }
         }
 
     }
